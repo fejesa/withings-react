@@ -7,19 +7,19 @@ public class HeartList {
 
     private final int status;
 
-    private final Body body;
+    private final HeartBody heartBody;
 
     @JsonCreator
-    public HeartList(@JsonProperty("status") int status, @JsonProperty("body") Body body) {
+    public HeartList(@JsonProperty("status") int status, @JsonProperty("body") HeartBody heartBody) {
         this.status = status;
-        this.body = body;
+        this.heartBody = heartBody;
     }
 
     public int getStatus() {
         return status;
     }
 
-    public Body getBody() {
-        return body;
+    public HeartBody getHeartBody() {
+        return heartBody;
     }
 }

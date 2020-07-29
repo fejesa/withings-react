@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class Body {
+public class HeartBody {
 
     private final List<Series> series;
 
@@ -14,7 +14,7 @@ public class Body {
     private final int offset;
 
     @JsonCreator
-    public Body(@JsonProperty("series") List<Series> series, @JsonProperty("more") boolean more, @JsonProperty("offset") int offset) {
+    public HeartBody(@JsonProperty("series") List<Series> series, @JsonProperty("more") boolean more, @JsonProperty("offset") int offset) {
         this.series = series;
         this.more = more;
         this.offset = offset;
