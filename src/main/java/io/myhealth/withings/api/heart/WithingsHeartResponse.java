@@ -1,6 +1,7 @@
-package io.myhealth.withings.web;
+package io.myhealth.withings.api.heart;
 
-import io.myhealth.withings.domain.heart.WithingsHeart;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
@@ -10,7 +11,8 @@ public class WithingsHeartResponse {
 
     private final List<WithingsHeart> heartList;
 
-    public WithingsHeartResponse(String userId, List<WithingsHeart> heartList) {
+    @JsonCreator
+    public WithingsHeartResponse(@JsonProperty("userId") String userId, @JsonProperty("heartList") List<WithingsHeart> heartList) {
         this.userId = userId;
         this.heartList = heartList;
     }

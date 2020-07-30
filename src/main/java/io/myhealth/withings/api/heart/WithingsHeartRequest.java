@@ -1,11 +1,11 @@
-package io.myhealth.withings.web;
+package io.myhealth.withings.api.heart;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
 
-public class WithingsRequest {
+public class WithingsHeartRequest {
 
     private final String userId;
 
@@ -14,7 +14,7 @@ public class WithingsRequest {
     private final LocalDateTime to;
 
     @JsonCreator
-    public WithingsRequest(@JsonProperty("userId") String userId, @JsonProperty("from") LocalDateTime from, @JsonProperty("to") LocalDateTime to) {
+    public WithingsHeartRequest(@JsonProperty("userId") String userId, @JsonProperty("from") LocalDateTime from, @JsonProperty("to") LocalDateTime to) {
         this.userId = userId;
         this.from = from;
         this.to = to;

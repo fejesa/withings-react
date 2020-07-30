@@ -2,7 +2,7 @@ package io.myhealth.withings.transform;
 
 import com.withings.api.heart.HeartList;
 import com.withings.api.heart.HeartMeasurement;
-import io.myhealth.withings.domain.heart.WithingsHeart;
+import io.myhealth.withings.api.heart.WithingsHeart;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

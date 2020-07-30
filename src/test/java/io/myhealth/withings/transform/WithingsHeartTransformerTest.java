@@ -1,7 +1,7 @@
 package io.myhealth.withings.transform;
 
 import com.withings.api.heart.*;
-import io.myhealth.withings.domain.heart.WithingsHeart;
+import io.myhealth.withings.api.heart.WithingsHeart;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
