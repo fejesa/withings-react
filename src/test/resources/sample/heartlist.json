@@ -1,0 +1,37 @@
+{
+  "status": 0,
+  "body": {
+    "series": [
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 5992490,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 84,
+          "systole": 128
+        },
+        "heart_rate": 62,
+        "timestamp": 1595916999
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 5982555,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 86,
+          "systole": 132
+        },
+        "heart_rate": 52,
+        "timestamp": 1595881259
+      }
+    ],
+    "more": false,
+    "offset": 0
+  }
+}
