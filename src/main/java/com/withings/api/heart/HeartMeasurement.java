@@ -3,7 +3,7 @@ package com.withings.api.heart;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Series {
+public class HeartMeasurement {
 
     private final String deviceId;
 
@@ -18,9 +18,9 @@ public class Series {
     private final int timestamp;
 
     @JsonCreator
-    public Series(@JsonProperty("deviceid") String deviceId, @JsonProperty("model") int model,
-                  @JsonProperty("ecg") Ecg ecg, @JsonProperty("bloodpressure") BloodPressure bloodPressure,
-                  @JsonProperty("heart_rate") int heartRate, @JsonProperty("timestamp") int timestamp) {
+    public HeartMeasurement(@JsonProperty("deviceid") String deviceId, @JsonProperty("model") int model,
+                            @JsonProperty("ecg") Ecg ecg, @JsonProperty("bloodpressure") BloodPressure bloodPressure,
+                            @JsonProperty("heart_rate") int heartRate, @JsonProperty("timestamp") int timestamp) {
         this.deviceId = deviceId;
         this.model = model;
         this.ecg = ecg;
