@@ -1,4 +1,4 @@
-package io.myhealth.withings.api.heart;
+package io.myhealth.withings.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

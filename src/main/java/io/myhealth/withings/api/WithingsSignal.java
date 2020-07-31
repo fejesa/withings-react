@@ -1,4 +1,4 @@
-package io.myhealth.withings.api.heart;
+package io.myhealth.withings.api;
 
 // TODO: implement signal
 public class WithingsSignal {

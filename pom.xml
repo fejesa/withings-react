@@ -16,7 +16,6 @@
 
 	<properties>
 		<java.version>11</java.version>
-		<reactor.rabbitmq.version>1.4.3.RELEASE</reactor.rabbitmq.version>
 		<jackson.version>2.11.1</jackson.version>
 		<slf4j.version>1.7.30</slf4j.version>
 		<logback.version>1.2.3</logback.version>
@@ -27,16 +26,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.projectreactor.rabbitmq</groupId>
-			<artifactId>reactor-rabbitmq</artifactId>
-			<version>${reactor.rabbitmq.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>

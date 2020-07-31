@@ -7,7 +7,7 @@ public class HeartMeasurement {
 
     private final String deviceId;
 
-    private final int model;
+    private final int modelId;
 
     private final Ecg ecg;
 
@@ -18,11 +18,11 @@ public class HeartMeasurement {
     private final int timestamp;
 
     @JsonCreator
-    public HeartMeasurement(@JsonProperty("deviceid") String deviceId, @JsonProperty("model") int model,
+    public HeartMeasurement(@JsonProperty("deviceid") String deviceId, @JsonProperty("model") int modelId,
                             @JsonProperty("ecg") Ecg ecg, @JsonProperty("bloodpressure") BloodPressure bloodPressure,
                             @JsonProperty("heart_rate") int heartRate, @JsonProperty("timestamp") int timestamp) {
         this.deviceId = deviceId;
-        this.model = model;
+        this.modelId = modelId;
         this.ecg = ecg;
         this.bloodPressure = bloodPressure;
         this.heartRate = heartRate;
@@ -33,8 +33,8 @@ public class HeartMeasurement {
         return deviceId;
     }
 
-    public int getModel() {
-        return model;
+    public int getModelId() {
+        return modelId;
     }
 
     public Ecg getEcg() {
