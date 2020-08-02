@@ -9,16 +9,16 @@ public class SignalBody {
 
     private int samplingFrequency;
 
-    private int wearPosition;
+    private int wearPositionId;
 
     private int model;
 
     @JsonCreator
     public SignalBody(@JsonProperty("signal") int[] signal, @JsonProperty("sampling_frequency") int samplingFrequency,
-                      @JsonProperty("wearposition") int wearPosition, @JsonProperty("model") int model) {
+                      @JsonProperty("wearposition") int wearPositionId, @JsonProperty("model") int model) {
         this.signal = signal;
         this.samplingFrequency = samplingFrequency;
-        this.wearPosition = wearPosition;
+        this.wearPositionId = wearPositionId;
         this.model = model;
     }
 
@@ -30,8 +30,8 @@ public class SignalBody {
         return samplingFrequency;
     }
 
-    public int getWearPosition() {
-        return wearPosition;
+    public int getWearPositionId() {
+        return wearPositionId;
     }
 
     public int getModel() {

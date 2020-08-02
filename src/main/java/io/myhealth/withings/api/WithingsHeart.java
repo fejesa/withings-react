@@ -15,16 +15,19 @@ public class WithingsHeart {
 
     private final int signalId;
 
+    private final String deviceName;
+
     private final LocalDateTime timestamp;
 
     @JsonCreator
     public WithingsHeart(@JsonProperty("diastole") int diastole, @JsonProperty("systole") int systole,
                          @JsonProperty("heartRate") int heartRate, @JsonProperty("signalId") int signalId,
-                         @JsonProperty("timestamp") LocalDateTime timestamp) {
+                         @JsonProperty("device") String deviceName, @JsonProperty("timestamp") LocalDateTime timestamp) {
         this.diastole = diastole;
         this.systole = systole;
         this.heartRate = heartRate;
         this.signalId = signalId;
+        this.deviceName = deviceName;
         this.timestamp = timestamp;
     }
 
@@ -42,6 +45,10 @@ public class WithingsHeart {
 
     public int getSignalId() {
         return signalId;
+    }
+
+    public String getDeviceName() {
+        return deviceName;
     }
 
     public LocalDateTime getTimestamp() {
