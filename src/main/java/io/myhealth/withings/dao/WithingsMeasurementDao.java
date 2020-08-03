@@ -55,7 +55,8 @@ public class WithingsMeasurementDao implements MeasurementDao {
                 .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
                 .retrieve()
                 .bodyToMono(Signal.class)
-                .doOnSuccess(t -> log.info("Signal {} is fetched", signalId));
+                .doOnSuccess(t -> log.info("Signal {} is fetched", signalId))
+                .doOnError(t -> t.printStackTrace());
     }
 
     private Mono<HeartList> getHeartLists(LocalDateTime from, LocalDateTime to) {

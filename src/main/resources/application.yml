@@ -1,3 +1,11 @@
 myhealth:
     withings:
         baseUri: https://wbsapi.withings.net/v2
+        tokenFile: /home/user/withings-token.json
+
+withings:
+    api:
+        tokenHost: https://account.withings.com
+        clientId: your_client_id
+        clientSecret: your_client_secret
+        redirectUri: your_redirect_uri

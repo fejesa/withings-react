@@ -1,32 +1,52 @@
 package io.myhealth.withings.transform;
 
 import com.withings.api.heart.*;
+import com.withings.api.user.Device;
+import com.withings.api.user.DeviceBody;
+import com.withings.api.user.DeviceList;
 import io.myhealth.withings.api.WithingsHeart;
-import org.junit.jupiter.api.Assertions;
+import io.myhealth.withings.model.HeartsWithDevices;
 import org.junit.jupiter.api.Test;
+import reactor.core.publisher.Mono;
 
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class WithingsHeartTransformerTest {
 
-//    @Test
-//    public void transformEmpty() {
-//        HeartBody body = new HeartBody(Collections.emptyList(), false, 0);
-//        HeartList heartList = new HeartList(0, body);
-//        Transformer<HeartList, List<WithingsHeart>> transformer = new WithingsHeartTransformer();
-//        List<WithingsHeart> result = transformer.transform(heartList);
-//        Assertions.assertTrue(result.isEmpty());
-//    }
-//
-//    @Test
-//    public void transform() {
-//        HeartMeasurement measurement = new HeartMeasurement("device", 0,
-//                new Ecg(1, 0),
-//                new BloodPressure(118, 75), 72, 1595881259);
-//        HeartList heartList = new HeartList(0, new HeartBody(List.of(measurement), false, 0));
-//        Transformer<HeartList, List<WithingsHeart>> transformer = new WithingsHeartTransformer();
-//        List<WithingsHeart> result = transformer.transform(heartList);
-//        Assertions.assertEquals(1, result.size());
-//    }
+    @Test
+    public void transformEmpty() {
+        HeartBody heartBody = new HeartBody(Collections.emptyList(), false, 0);
+        HeartList heartList = new HeartList(0, heartBody);
+
+        DeviceBody deviceBody = new DeviceBody(Collections.emptyList());
+        DeviceList deviceList = new DeviceList(0, deviceBody);
+        Mono<HeartsWithDevices> in = Mono.just(new HeartsWithDevices(heartList, deviceList));
+
+        Mono<List<WithingsHeart>> out = new WithingsHeartTransformer().apply(in);
+        out.subscribe(result -> assertTrue(result.isEmpty()));
+    }
+
+
+    @Test
+    public void transform() {
+        int modelId = 1;
+
+        HeartMeasurement measurement = new HeartMeasurement("device", modelId,
+                new Ecg(1, 0),
+                new BloodPressure(118, 75), 72, 1595881259);
+        HeartList heartList = new HeartList(0, new HeartBody(List.of(measurement), false, 0));
+
+        Device device = new Device("type", "battery", "model", modelId, "Europe/Berlin", 1, "deviceid");
+        DeviceBody deviceBody = new DeviceBody(List.of(device));
+        DeviceList deviceList = new DeviceList(0, deviceBody);
+
+        Mono<HeartsWithDevices> in = Mono.just(new HeartsWithDevices(heartList, deviceList));
+
+        Mono<List<WithingsHeart>> out = new WithingsHeartTransformer().apply(in);
+        out.subscribe(result -> assertEquals(1, result.size()));
+    }
 }

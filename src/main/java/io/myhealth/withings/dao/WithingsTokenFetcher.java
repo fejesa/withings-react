@@ -53,6 +53,7 @@ public class WithingsTokenFetcher implements TokenFetcher {
         try {
             WithingsToken token = load();
 
+            // TODO: retry + error handling
             Mono<WithingsToken> result = webClient
                     .post()
                     .uri("/oauth2/token")

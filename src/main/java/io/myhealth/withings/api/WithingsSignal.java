@@ -37,4 +37,8 @@ public class WithingsSignal {
     public String getWearPosition() {
         return wearPosition;
     }
+
+    public static WithingsSignal empty() {
+        return new WithingsSignal(new int[]{}, 0, "", "");
+    }
 }
