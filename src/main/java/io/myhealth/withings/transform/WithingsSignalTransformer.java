@@ -14,12 +14,16 @@ public class WithingsSignalTransformer implements Function<Mono<SignalWithDevice
     @Override
     public Mono<WithingsSignal> apply(Mono<SignalWithDevices> from) {
         return from
-                .map(f -> new WithingsSignal(
-                    f.getSignal().getBody().getSignal(),
-                    f.getSignal().getBody().getSamplingFrequency(),
-                    findDevice(f.getDeviceList(), f.getSignal().getBody().getModel()),
-                    getWearPosition(f.getSignal())))
+                .map(this::transform)
                 .defaultIfEmpty(WithingsSignal.empty());
+    }
+
+    private WithingsSignal transform(SignalWithDevices result) {
+        return new WithingsSignal(
+                result.getSignal().getBody().getSignal(),
+                result.getSignal().getBody().getSamplingFrequency(),
+                findDevice(result.getDeviceList(), result.getSignal().getBody().getModel()),
+                getWearPosition(result.getSignal()));
     }
 
     private String getWearPosition(Signal signal) {

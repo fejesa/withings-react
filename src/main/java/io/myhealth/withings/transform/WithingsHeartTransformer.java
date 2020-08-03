@@ -21,14 +21,17 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
     @Override
     public Mono<List<WithingsHeart>> apply(Mono<HeartsWithDevices> from) {
         return from
-                .map(f -> f
-                    .getHeartList()
-                    .getHeartBody().getSeries()
-                        .stream()
-                        .map(m -> fromMeasurement(m, f.getDeviceList()))
-                        .sorted(Comparator.comparing(WithingsHeart::getTimestamp).reversed())
-                    .collect(Collectors.toList()))
+                .map(this::transform)
                 .defaultIfEmpty(Collections.emptyList());
+    }
+
+    private List<WithingsHeart> transform(HeartsWithDevices result) {
+        return result.getHeartList()
+                .getHeartBody().getSeries()
+                .stream()
+                .map(m -> fromMeasurement(m, result.getDeviceList()))
+                .sorted(Comparator.comparing(WithingsHeart::getTimestamp).reversed())
+                .collect(Collectors.toList());
     }
 
     private WithingsHeart fromMeasurement(HeartMeasurement measurement, DeviceList devices) {
