@@ -4,7 +4,7 @@ import com.withings.api.heart.HeartMeasurement;
 import com.withings.api.user.Device;
 import com.withings.api.user.DeviceList;
 import io.myhealth.withings.api.WithingsHeart;
-import io.myhealth.withings.dao.HeartsWithDevices;
+import io.myhealth.withings.model.HeartsWithDevices;
 import reactor.core.publisher.Mono;
 
 import java.time.Instant;
@@ -21,9 +21,9 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
         return from.map(f -> f
                 .getHeartList()
                 .getHeartBody().getSeries()
-                .stream()
-                .map(m -> fromMeasurement(m, f.getDeviceList()))
-                .collect(Collectors.toList()));
+                    .stream()
+                    .map(m -> fromMeasurement(m, f.getDeviceList()))
+                    .collect(Collectors.toList()));
     }
 
     private WithingsHeart fromMeasurement(HeartMeasurement measurement, DeviceList devices) {

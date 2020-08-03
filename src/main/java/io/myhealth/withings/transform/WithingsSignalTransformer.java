@@ -3,7 +3,7 @@ package io.myhealth.withings.transform;
 import com.withings.api.user.Device;
 import com.withings.api.user.DeviceList;
 import io.myhealth.withings.api.WithingsSignal;
-import io.myhealth.withings.dao.SignalWithDevices;
+import io.myhealth.withings.model.SignalWithDevices;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Function;

@@ -4,5 +4,4 @@ public interface TokenDao {
 
     String getAccessToken();
 
-    String getRefreshToken();
 }

@@ -1,4 +1,4 @@
-package io.myhealth.withings.dao;
+package io.myhealth.withings.model;
 
 import com.withings.api.heart.Signal;
 import com.withings.api.user.DeviceList;

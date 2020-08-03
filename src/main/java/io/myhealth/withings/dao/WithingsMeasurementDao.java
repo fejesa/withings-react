@@ -3,17 +3,24 @@ package io.myhealth.withings.dao;
 import com.withings.api.heart.HeartList;
 import com.withings.api.heart.Signal;
 import com.withings.api.user.DeviceList;
+import io.myhealth.withings.model.HeartsWithDevices;
+import io.myhealth.withings.model.SignalWithDevices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.lang.invoke.MethodHandles;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Component
 public class WithingsMeasurementDao implements MeasurementDao {
+
+    private final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final WebClient webClient;
 
@@ -41,12 +48,14 @@ public class WithingsMeasurementDao implements MeasurementDao {
     }
 
     private Mono<Signal> getSignal(int signalId) {
+        // TODO: retry + error handling
         return webClient
                 .get()
                 .uri(getHeartUri(signalId))
                 .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
                 .retrieve()
-                .bodyToMono(Signal.class);
+                .bodyToMono(Signal.class)
+                .doOnSuccess(t -> log.info("Signal {} is fetched", signalId));
     }
 
     private Mono<HeartList> getHeartLists(LocalDateTime from, LocalDateTime to) {
@@ -55,7 +64,8 @@ public class WithingsMeasurementDao implements MeasurementDao {
                 .uri(getHearListUri(from, to))
                 .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
                 .retrieve()
-                .bodyToMono(HeartList.class);
+                .bodyToMono(HeartList.class)
+                .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}", from, to));
     }
 
     private Mono<DeviceList> getDeviceList() {
@@ -64,7 +74,8 @@ public class WithingsMeasurementDao implements MeasurementDao {
                 .uri(getDeviceUri())
                 .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
                 .retrieve()
-                .bodyToMono(DeviceList.class);
+                .bodyToMono(DeviceList.class)
+                .doOnSuccess(t -> log.info("Device list is fetched"));
     }
 
     private String getDeviceUri() {
