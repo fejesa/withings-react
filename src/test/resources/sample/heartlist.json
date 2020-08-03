@@ -3,7 +3,7 @@
   "body": {
     "series": [
       {
-        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "deviceid": "xxxxxx",
         "model": 44,
         "ecg": {
           "signalid": 5992490,
@@ -17,7 +17,7 @@
         "timestamp": 1595916999
       },
       {
-        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "deviceid": "xxxxxx",
         "model": 44,
         "ecg": {
           "signalid": 5982555,

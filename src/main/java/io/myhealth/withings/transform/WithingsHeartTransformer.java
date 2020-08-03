@@ -9,6 +9,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.function.Function;
@@ -23,7 +24,8 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
                 .getHeartBody().getSeries()
                     .stream()
                     .map(m -> fromMeasurement(m, f.getDeviceList()))
-                    .collect(Collectors.toList()));
+                .sorted(Comparator.comparing(WithingsHeart::getTimestamp).reversed())
+                .collect(Collectors.toList()));
     }
 
     private WithingsHeart fromMeasurement(HeartMeasurement measurement, DeviceList devices) {

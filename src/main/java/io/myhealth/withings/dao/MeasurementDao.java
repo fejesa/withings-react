@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 
 public interface MeasurementDao {
 
-    // TODO: use int as params
     Mono<HeartsWithDevices> getHeartListAndDevices(LocalDateTime from, LocalDateTime to);
 
     Mono<SignalWithDevices> getSignalAndDevices(int signalId);

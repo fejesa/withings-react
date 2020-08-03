@@ -2,7 +2,7 @@ package io.myhealth.withings.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.withings.api.oauth.Token;
-import io.myhealth.withings.WithingsException;
+import io.myhealth.withings.api.WithingsException;
 import io.myhealth.withings.model.WithingsToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +48,7 @@ public class WithingsTokenFetcher implements TokenFetcher {
     private WebClient webClient;
 
     @Override
-    @Scheduled(fixedRate = 30L * 1000)
+    @Scheduled(fixedRate = 2L * 3600 * 1000)
     public void getRefreshToken() {
         try {
             WithingsToken token = load();

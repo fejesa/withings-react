@@ -4,29 +4,24 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 public class WithingsHeartRequest {
 
-    private final int from;
+    private final LocalDateTime from;
 
-    private final int to;
+    private final LocalDateTime to;
 
     @JsonCreator
-    public WithingsHeartRequest(@JsonProperty("from") int from, @JsonProperty("to") int to) {
+    public WithingsHeartRequest(@JsonProperty("from") LocalDateTime from, @JsonProperty("to") LocalDateTime to) {
         this.from = from;
         this.to = to;
     }
 
     public LocalDateTime getFrom() {
-        return toDateTime(from);
+        return from;
     }
 
     public LocalDateTime getTo() {
-        return toDateTime(to);
-    }
-
-    private LocalDateTime toDateTime(int i) {
-        return LocalDateTime.ofEpochSecond(i, 0, ZoneOffset.UTC);
+        return to;
     }
 }

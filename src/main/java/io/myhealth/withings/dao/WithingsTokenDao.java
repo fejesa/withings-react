@@ -1,7 +1,7 @@
 package io.myhealth.withings.dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.myhealth.withings.WithingsException;
+import io.myhealth.withings.api.WithingsException;
 import io.myhealth.withings.model.WithingsToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

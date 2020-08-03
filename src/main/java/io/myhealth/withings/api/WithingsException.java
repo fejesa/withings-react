@@ -1,4 +1,4 @@
-package io.myhealth.withings;
+package io.myhealth.withings.api;
 
 public class WithingsException extends RuntimeException {
 
