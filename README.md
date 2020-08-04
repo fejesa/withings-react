@@ -2,6 +2,12 @@
 The example application demonstrates how to access the [Withings](https://developer.withings.com/) health API in reactive way
 by using [Spring Webflux](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html).
 
+The client can call the
+* /heart
+* /ecg
+
+REST API.
+
 The client can fetch Blood Pressure measurement results in a given period by sending
 a GET request from a console - for example using [httpie](https://httpie.org/) - like
 ```
