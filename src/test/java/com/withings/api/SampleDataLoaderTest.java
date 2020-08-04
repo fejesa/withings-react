@@ -10,10 +10,10 @@ import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SampleDataLoaderTest {
+class SampleDataLoaderTest {
 
     @Test
-    public void loadHeartList() throws Exception {
+    void loadHeartList() throws Exception {
         URL resource = SampleDataLoaderTest.class.getResource("/sample/heartlist.json");
         HeartList heartList = new ObjectMapper().readValue(resource, HeartList.class);
         assertNotNull(heartList);
@@ -21,7 +21,7 @@ public class SampleDataLoaderTest {
     }
 
     @Test
-    public void loadSignal() throws Exception {
+    void loadSignal() throws Exception {
         URL resource = SampleDataLoaderTest.class.getResource("/sample/signal.json");
         Signal signal = new ObjectMapper().readValue(resource, Signal.class);
         assertNotNull(signal);
@@ -29,7 +29,7 @@ public class SampleDataLoaderTest {
     }
 
     @Test
-    public void loadDevices() throws Exception {
+    void loadDevices() throws Exception {
         URL resource = SampleDataLoaderTest.class.getResource("/sample/devices.json");
         DeviceList deviceList = new ObjectMapper().readValue(resource, DeviceList.class);
         assertNotNull(deviceList);

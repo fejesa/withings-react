@@ -1,6 +1,5 @@
 package io.myhealth.withings.dao;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.myhealth.withings.api.WithingsException;
 import io.myhealth.withings.model.WithingsToken;
 import org.slf4j.Logger;
@@ -10,9 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Component
 public class WithingsTokenDao implements TokenDao {
@@ -25,19 +21,14 @@ public class WithingsTokenDao implements TokenDao {
     @Override
     public String getAccessToken() {
         try {
-            WithingsToken withingsToken = load();
+            WithingsToken withingsToken = WithingsToken.read(tokenFile);
             if (withingsToken.getAccessToken().isEmpty()) {
                 throw new WithingsException("No Withings token found");
             }
             return withingsToken.getAccessToken();
         } catch (IOException e) {
-            log.error("Token file loading failed, {}", e);
+            log.error("Token file loading failed", e);
             throw new WithingsException("Token file loading failure");
         }
-    }
-
-    private WithingsToken load() throws IOException  {
-        Path path = Paths.get(tokenFile).toAbsolutePath();
-        return Files.exists(path) ? new ObjectMapper().readValue(path.toFile(), WithingsToken.class) : WithingsToken.empty();
     }
 }

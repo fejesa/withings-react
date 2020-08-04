@@ -14,17 +14,17 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WithingsSignalTransformerTest {
+class WithingsSignalTransformerTest {
 
     @Test
-    public void transformEmpty() {
+    void transformEmpty() {
         Mono<SignalWithDevices> in = Mono.empty();
         Mono<WithingsSignal> out = new WithingsSignalTransformer().apply(in);
         out.subscribe(result -> assertTrue(result.getDeviceName().isEmpty()));
     }
 
     @Test
-    public void transform() {
+    void transform() {
         int modelId = 1;
         int wearPositionId = 0;
         Device device = new Device("type", "battery", "model", modelId, "Europe/Berlin", 1, "deviceid");

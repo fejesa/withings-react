@@ -1,6 +1,5 @@
 package io.myhealth.withings.dao;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.withings.api.oauth.Token;
 import io.myhealth.withings.api.WithingsException;
 import io.myhealth.withings.model.WithingsToken;
@@ -20,12 +19,7 @@ import reactor.core.scheduler.Schedulers;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Component
 @EnableScheduling
@@ -49,11 +43,10 @@ public class WithingsTokenFetcher implements TokenFetcher {
 
     @Override
     @Scheduled(fixedRate = 2L * 3600 * 1000)
-    public void getRefreshToken() {
+    public void refreshToken() {
         try {
-            WithingsToken token = load();
+            WithingsToken token = WithingsToken.read(tokenFile);
 
-            // TODO: retry + error handling
             Mono<WithingsToken> result = webClient
                     .post()
                     .uri("/oauth2/token")
@@ -64,12 +57,13 @@ public class WithingsTokenFetcher implements TokenFetcher {
                     .map(t -> new WithingsToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
                     .subscribeOn(Schedulers.elastic())
                     .doOnNext(this::writeToken)
-                    .doOnSuccess(t -> log.info("Token successfully refreshed"));
+                    .doOnSuccess(t -> log.info("Token successfully refreshed"))
+                    .doOnError(e -> log.error("Token fetch error", e));
 
             result.subscribe();
 
         } catch (IOException e) {
-            log.error("Withing token refresh error, {}", e);
+            log.error("Withing token refresh error", e);
             throw new WithingsException("Token refresh error");
         }
     }
@@ -92,23 +86,15 @@ public class WithingsTokenFetcher implements TokenFetcher {
         webClient = WebClient.create(tokenHost);
     }
 
-    private WithingsToken load() throws IOException  {
-        Path path = Paths.get(tokenFile).toAbsolutePath();
-        return Files.exists(path) ? new ObjectMapper().readValue(path.toFile(), WithingsToken.class) : WithingsToken.empty();
-    }
-
-    private long getExpirationTime(int offset) {
-        LocalDateTime localDateTime = LocalDateTime.now().plusSeconds(offset);
-        return localDateTime.toEpochSecond(ZoneOffset.UTC);
+    private LocalDateTime getExpirationTime(int offset) {
+        return LocalDateTime.now().plusSeconds(offset);
     }
 
     private void writeToken(WithingsToken token) {
         try {
-            Path path = Paths.get(tokenFile).toAbsolutePath();
-            String content = new ObjectMapper().writeValueAsString(token);
-            Files.writeString(path, content, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
+            WithingsToken.writeToken(token, tokenFile);
         } catch (IOException e) {
-            log.error("Token file error, {}", e);
+            log.error("Token file error", e);
         }
     }
 }

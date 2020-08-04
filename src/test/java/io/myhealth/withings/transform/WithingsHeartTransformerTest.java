@@ -15,10 +15,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class WithingsHeartTransformerTest {
+class WithingsHeartTransformerTest {
 
     @Test
-    public void transformEmpty() {
+    void transformEmpty() {
         HeartBody heartBody = new HeartBody(Collections.emptyList(), false, 0);
         HeartList heartList = new HeartList(0, heartBody);
 
@@ -32,7 +32,7 @@ public class WithingsHeartTransformerTest {
 
 
     @Test
-    public void transform() {
+    void transform() {
         int modelId = 1;
 
         HeartMeasurement measurement = new HeartMeasurement("device", modelId,
