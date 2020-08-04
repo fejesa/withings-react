@@ -9,10 +9,10 @@
 		<relativePath/>
 	</parent>
 	<groupId>io.myhealth.withings</groupId>
-	<artifactId>withings-int</artifactId>
+	<artifactId>withings-react</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>withings-int</name>
-	<description>Withings Health Mate integration</description>
+	<name>withings-reactive</name>
+	<description>Withings Health Mate reactive</description>
 
 	<properties>
 		<java.version>11</java.version>
