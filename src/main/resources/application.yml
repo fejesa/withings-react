@@ -1,7 +1,7 @@
 myhealth:
     withings:
         baseUri: https://wbsapi.withings.net/v2
-        tokenFile: /home/user/withings-token.json
+        tokenFile: file:/home/user/withings-token.json
 
 withings:
     api:

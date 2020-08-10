@@ -1,7 +1,9 @@
 package io.myhealth.withings.dao;
 
+import reactor.core.publisher.Mono;
+
 public interface TokenDao {
 
-    String getAccessToken();
+    Mono<String> getAccessToken();
 
 }

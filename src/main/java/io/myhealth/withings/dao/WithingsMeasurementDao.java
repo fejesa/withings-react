@@ -50,42 +50,45 @@ public class WithingsMeasurementDao implements MeasurementDao {
     }
 
     private Mono<Signal> getSignal(int signalId) {
-        return webClient
-                .get()
-                .uri(getHeartUri(signalId))
-                .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error")))
-                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Server error")))
-                .bodyToMono(Signal.class)
-                .doOnSuccess(t -> log.info("Signal {} is fetched", signalId))
-                .doOnError(e -> log.error("Error during the signal fetch", e));
+        return tokenDao.getAccessToken()
+                .flatMap(rt -> webClient
+                        .get()
+                        .uri(getHeartUri(signalId))
+                        .headers(h -> h.setBearerAuth(rt))
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during signal fetch")))
+                        .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during signal fetch")))
+                        .bodyToMono(Signal.class)
+                        .doOnSuccess(t -> log.info("Signal {} is fetched", signalId))
+                        .doOnError(e -> log.error("Error during the signal fetch", e)));
     }
 
     private Mono<HeartList> getHeartLists(LocalDateTime from, LocalDateTime to) {
-        return webClient
-                .get()
-                .uri(getHearListUri(from, to))
-                .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error")))
-                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Server error")))
-                .bodyToMono(HeartList.class)
-                .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}", from, to))
-                .doOnError(e -> log.error("Error during the heart list fetch", e));
+        return tokenDao.getAccessToken()
+                .flatMap(rt -> webClient
+                        .get()
+                        .uri(getHearListUri(from, to))
+                        .headers(h -> h.setBearerAuth(rt))
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during heart list fetch")))
+                        .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during heart list fetch")))
+                        .bodyToMono(HeartList.class)
+                        .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}", from, to))
+                        .doOnError(e -> log.error("Error during the heart list fetch", e)));
     }
 
     private Mono<DeviceList> getDeviceList() {
-        return webClient
-                .get()
-                .uri("/user?action=getdevice")
-                .headers(h -> h.setBearerAuth(tokenDao.getAccessToken()))
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error")))
-                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Server error")))
-                .bodyToMono(DeviceList.class)
-                .doOnSuccess(t -> log.info("Device list is fetched"))
-                .doOnError(e -> log.error("Error during the device list fetch", e));
+        return  tokenDao.getAccessToken()
+                .flatMap(rt -> webClient
+                        .get()
+                        .uri("/user?action=getdevice")
+                        .headers(h -> h.setBearerAuth(rt))
+                        .retrieve()
+                        .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during device list fetch")))
+                        .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during device list fetch")))
+                        .bodyToMono(DeviceList.class)
+                        .doOnSuccess(t -> log.info("Device list is fetched"))
+                        .doOnError(e -> log.error("Error during the device list fetch", e)));
     }
 
     private String getHeartUri(int signalId) {

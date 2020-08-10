@@ -21,4 +21,17 @@ public class HeartsWithDevices {
     public DeviceList getDeviceList() {
         return deviceList;
     }
+
+    public boolean isSuccess() {
+        if (heartList != null && deviceList != null) {
+            return heartList.getStatus() == 0 && deviceList.getStatus() == 0;
+        }
+        return false;
+    }
+
+    public String getStatus() {
+        String heartListStatus = heartList != null ? Integer.toString(heartList.getStatus()) : "Unknown";
+        String deviceListStatus = deviceList != null ? Integer.toString(deviceList.getStatus()) : "Unknown";
+        return String.format("%s,%s", heartListStatus, deviceListStatus);
+    }
 }

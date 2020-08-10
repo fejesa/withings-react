@@ -5,8 +5,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.core.ResolvableType;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferUtils;
+import org.springframework.core.io.buffer.DefaultDataBufferFactory;
+import org.springframework.http.codec.json.Jackson2JsonDecoder;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -41,17 +50,18 @@ public class WithingsToken {
         return expirationTime;
     }
 
-    public static WithingsToken empty() {
-        return new WithingsToken("", "", null);
-    }
-
-    public static WithingsToken read(String tokenFile) throws IOException {
-        Path path = Paths.get(tokenFile).toAbsolutePath();
-        return Files.exists(path) ? getObjectMapper().readValue(path.toFile(), WithingsToken.class) :WithingsToken.empty();
+    public static Mono<WithingsToken> read(String tokenFile) {
+        Flux<DataBuffer> dataBuffer = DataBufferUtils.read(
+                new DefaultResourceLoader().getResource(tokenFile),
+                new DefaultDataBufferFactory(),
+                4096);
+        return new Jackson2JsonDecoder()
+                .decodeToMono(dataBuffer, ResolvableType.forClass(WithingsToken.class), null, null)
+                .map(o -> (WithingsToken)o);
     }
 
     public static void writeToken(WithingsToken token, String file) throws IOException {
-        Path path = Paths.get(file).toAbsolutePath();
+        Path path = Paths.get(URI.create(file)).toAbsolutePath();
         String content = getObjectMapper().writeValueAsString(token);
         Files.writeString(path, content, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING);
     }

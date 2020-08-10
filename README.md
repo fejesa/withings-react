@@ -68,7 +68,7 @@ Customize the _application.yml_ file with your settings
 myhealth:
     withings:
         baseUri: https://wbsapi.withings.net/v2
-        tokenFile: your_withings_token_json_path
+        tokenFile: file:/your_withings_token_json_path
 
 withings:
     api:

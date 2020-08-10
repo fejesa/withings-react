@@ -1,7 +1,6 @@
 package io.myhealth.withings.dao;
 
 import com.withings.api.oauth.Token;
-import io.myhealth.withings.api.WithingsException;
 import io.myhealth.withings.model.WithingsToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,40 +43,36 @@ public class WithingsTokenFetcher implements TokenFetcher {
     @Override
     @Scheduled(fixedRate = 2L * 3600 * 1000)
     public void refreshToken() {
-        try {
-            WithingsToken token = WithingsToken.read(tokenFile);
 
-            Mono<WithingsToken> result = webClient
-                    .post()
-                    .uri("/oauth2/token")
-                    .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
-                    .body(createBodyInserter(token))
-                    .exchange()
-                    .flatMap(response -> response.bodyToMono(Token.class))
-                    .map(t -> new WithingsToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
-                    .subscribeOn(Schedulers.elastic())
-                    .doOnNext(this::writeToken)
-                    .doOnSuccess(t -> log.info("Token successfully refreshed"))
-                    .doOnError(e -> log.error("Token fetch error", e));
+        Mono<WithingsToken> result = WithingsToken
+                .read(tokenFile)
+                .flatMap(withingsToken -> webClient
+                        .post()
+                        .uri("/oauth2/token")
+                        .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
+                        .body(createBodyInserter(withingsToken.getRefreshToken()))
+                        .exchange()
+                        .flatMap(response -> response.bodyToMono(Token.class))
+                        .map(t -> new WithingsToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
+                        .subscribeOn(Schedulers.elastic())
+                        .doOnSuccess(t -> log.info("Token successfully refreshed"))
+                        .doOnError(e -> log.error("Token fetch error", e))
+                );
 
-            result.subscribe();
-
-        } catch (IOException e) {
-            log.error("Withing token refresh error", e);
-            throw new WithingsException("Token refresh error");
-        }
+        result.subscribe(this::writeToken);
     }
 
-    private BodyInserters.MultipartInserter createBodyInserter(WithingsToken withingsToken) {
-        return BodyInserters.fromMultipartData(createRequestBody(withingsToken).build());
+    private BodyInserters.MultipartInserter createBodyInserter(String token) {
+        return BodyInserters.fromMultipartData(createRequestBody(token).build());
     }
 
-    private MultipartBodyBuilder createRequestBody(WithingsToken token) {
+    private MultipartBodyBuilder createRequestBody(String token) {
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("action", "requesttoken");
         builder.part("grant_type", "refresh_token");
         builder.part("client_id", clientId);
         builder.part("client_secret", clientSecret);
-        builder.part("refresh_token", token.getRefreshToken());
+        builder.part("refresh_token", token);
         return builder;
     }
 
