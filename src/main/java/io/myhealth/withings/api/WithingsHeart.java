@@ -13,6 +13,7 @@ public class WithingsHeart {
 
     private final int heartRate;
 
+    /** -1 means no signal is detected */
     private final int signalId;
 
     private final String deviceName;

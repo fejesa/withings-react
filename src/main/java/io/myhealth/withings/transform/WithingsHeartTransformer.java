@@ -1,7 +1,6 @@
 package io.myhealth.withings.transform;
 
 import com.withings.api.heart.HeartMeasurement;
-import com.withings.api.user.Device;
 import com.withings.api.user.DeviceList;
 import io.myhealth.withings.api.WithingsHeart;
 import io.myhealth.withings.model.HeartsWithDevices;
@@ -39,20 +38,11 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
         int systole = measurement.getBloodPressure().getSystole();
         int heartRate = measurement.getHeartRate();
         int signalId = getSignalId(measurement);
-        String deviceName = findDevice(devices, measurement.getModelId());
+        String deviceName = Devices.find(devices, measurement.getModelId());
         LocalDateTime timestamp = LocalDateTime.ofInstant(
                 Instant.ofEpochSecond(measurement.getTimestamp()), TimeZone.getDefault().toZoneId());
 
         return new WithingsHeart(diastole, systole, heartRate, signalId, deviceName, timestamp);
-    }
-
-    private String findDevice(DeviceList devices, int modelId) {
-        return devices.getDeviceBody().getDevices()
-                .stream()
-                .filter(d -> d.getModelId() == modelId)
-                .map(Device::getModel)
-                .findAny()
-                .orElse("Unknown");
     }
 
     private int getSignalId(HeartMeasurement measurement) {
