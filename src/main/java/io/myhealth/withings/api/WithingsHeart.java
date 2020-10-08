@@ -3,8 +3,6 @@ package io.myhealth.withings.api;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
-
 public class WithingsHeart {
 
     private final int diastole;
@@ -18,12 +16,12 @@ public class WithingsHeart {
 
     private final String deviceName;
 
-    private final LocalDateTime timestamp;
+    private final int timestamp;
 
     @JsonCreator
     public WithingsHeart(@JsonProperty("diastole") int diastole, @JsonProperty("systole") int systole,
                          @JsonProperty("heartRate") int heartRate, @JsonProperty("signalId") int signalId,
-                         @JsonProperty("device") String deviceName, @JsonProperty("timestamp") LocalDateTime timestamp) {
+                         @JsonProperty("deviceName") String deviceName, @JsonProperty("timestamp") int timestamp) {
         this.diastole = diastole;
         this.systole = systole;
         this.heartRate = heartRate;
@@ -52,7 +50,7 @@ public class WithingsHeart {
         return deviceName;
     }
 
-    public LocalDateTime getTimestamp() {
+    public int getTimestamp() {
         return timestamp;
     }
 }

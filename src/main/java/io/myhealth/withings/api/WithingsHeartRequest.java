@@ -3,25 +3,25 @@ package io.myhealth.withings.api;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class WithingsHeartRequest {
 
-    private final LocalDateTime from;
+    private final LocalDate from;
 
-    private final LocalDateTime to;
+    private final LocalDate to;
 
     @JsonCreator
-    public WithingsHeartRequest(@JsonProperty("from") LocalDateTime from, @JsonProperty("to") LocalDateTime to) {
+    public WithingsHeartRequest(@JsonProperty("from") LocalDate from, @JsonProperty("to") LocalDate to) {
         this.from = from;
         this.to = to;
     }
 
-    public LocalDateTime getFrom() {
+    public LocalDate getFrom() {
         return from;
     }
 
-    public LocalDateTime getTo() {
+    public LocalDate getTo() {
         return to;
     }
 }

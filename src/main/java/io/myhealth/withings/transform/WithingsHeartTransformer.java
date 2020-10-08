@@ -6,12 +6,9 @@ import io.myhealth.withings.api.WithingsHeart;
 import io.myhealth.withings.model.HeartsWithDevices;
 import reactor.core.publisher.Mono;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -39,10 +36,7 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
         int heartRate = measurement.getHeartRate();
         int signalId = getSignalId(measurement);
         String deviceName = Devices.find(devices, measurement.getModelId());
-        LocalDateTime timestamp = LocalDateTime.ofInstant(
-                Instant.ofEpochSecond(measurement.getTimestamp()), TimeZone.getDefault().toZoneId());
-
-        return new WithingsHeart(diastole, systole, heartRate, signalId, deviceName, timestamp);
+        return new WithingsHeart(diastole, systole, heartRate, signalId, deviceName, measurement.getTimestamp());
     }
 
     private int getSignalId(HeartMeasurement measurement) {

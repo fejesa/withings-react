@@ -16,7 +16,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.lang.invoke.MethodHandles;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 
 @Component
@@ -34,7 +35,7 @@ public class WithingsMeasurementDao implements MeasurementDao {
     }
 
     @Override
-    public Mono<HeartsWithDevices> getHeartListAndDevices(LocalDateTime from, LocalDateTime to) {
+    public Mono<HeartsWithDevices> getHeartListAndDevices(LocalDate from, LocalDate to) {
         Mono<HeartList> heartList = getHeartLists(from, to).subscribeOn(Schedulers.elastic());
         Mono<DeviceList> deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
 
@@ -63,7 +64,7 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .doOnError(e -> log.error("Error during the signal fetch", e)));
     }
 
-    private Mono<HeartList> getHeartLists(LocalDateTime from, LocalDateTime to) {
+    private Mono<HeartList> getHeartLists(LocalDate from, LocalDate to) {
         return tokenDao.getAccessToken()
                 .flatMap(rt -> webClient
                         .get()
@@ -95,14 +96,14 @@ public class WithingsMeasurementDao implements MeasurementDao {
         return "/heart?action=get&signalid=" + signalId;
     }
 
-    private String getHearListUri(LocalDateTime from, LocalDateTime to) {
+    private String getHearListUri(LocalDate from, LocalDate to) {
         StringBuilder builder = new StringBuilder("/heart?action=list");
         builder.append("&startdate=").append(toEpochSecond(from));
         builder.append("&enddate=").append(toEpochSecond(to));
         return builder.toString();
     }
 
-    private long toEpochSecond(LocalDateTime time) {
-        return time.toEpochSecond(ZoneOffset.UTC);
+    private long toEpochSecond(LocalDate date) {
+        return date.toEpochSecond(LocalTime.MIN, ZoneOffset.UTC);
     }
 }
