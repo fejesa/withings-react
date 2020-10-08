@@ -16,8 +16,11 @@ http GET localhost:8080/heart from==2020-07-01 to==2020-07-31
 and gets the response like
 ```html
 HTTP/1.1 200 OK
-Content-Length: 591
+Content-Length: 657
 Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
 [
     {
             "deviceName": "BPM Core",
