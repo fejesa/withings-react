@@ -98,12 +98,15 @@ public class WithingsMeasurementDao implements MeasurementDao {
 
     private String getHearListUri(LocalDate from, LocalDate to) {
         StringBuilder builder = new StringBuilder("/heart?action=list");
-        builder.append("&startdate=").append(toEpochSecond(from));
-        builder.append("&enddate=").append(toEpochSecond(to));
+        builder.append("&startdate=").append(toStartDate(from));
+        builder.append("&enddate=").append(toEndDate(to));
         return builder.toString();
     }
 
-    private long toEpochSecond(LocalDate date) {
+    private long toStartDate(LocalDate date) {
         return date.toEpochSecond(LocalTime.MIN, ZoneOffset.UTC);
+    }
+    private long toEndDate(LocalDate date) {
+        return date.toEpochSecond(LocalTime.MAX, ZoneOffset.UTC);
     }
 }
