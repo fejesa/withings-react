@@ -46,23 +46,23 @@ public class WithingsMeasurementDao implements MeasurementDao {
 
     @Override
     public Mono<SignalWithDevices> getSignalAndDevices(WithingsSignalRequest request) {
-        Mono<Signal> signal = getSignal(request.getSignalId()).subscribeOn(Schedulers.elastic());
+        Mono<Signal> signal = getSignal(request).subscribeOn(Schedulers.elastic());
         Mono<DeviceList> deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
 
         return Mono.zip(signal, deviceList, SignalWithDevices::new);
     }
 
-    private Mono<Signal> getSignal(int signalId) {
+    private Mono<Signal> getSignal(WithingsSignalRequest request) {
         return tokenDao.getAccessToken()
                 .flatMap(rt -> webClient
                         .get()
-                        .uri(getHeartUri(signalId))
+                        .uri(uriBuilder -> buildHeartUri(uriBuilder, request))
                         .headers(h -> h.setBearerAuth(rt))
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during signal fetch")))
                         .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during signal fetch")))
                         .bodyToMono(Signal.class)
-                        .doOnSuccess(t -> log.info("Signal {} is fetched", signalId))
+                        .doOnSuccess(t -> log.info("Signal {} is fetched", request.getSignalId()))
                         .doOnError(e -> log.error("Error during the signal fetch", e)));
     }
 
@@ -70,7 +70,7 @@ public class WithingsMeasurementDao implements MeasurementDao {
         return tokenDao.getAccessToken()
                 .flatMap(rt -> webClient
                         .get()
-                        .uri(uriBuilder -> build(uriBuilder, request))
+                        .uri(uriBuilder -> buildHeartListUri(uriBuilder, request))
                         .headers(h -> h.setBearerAuth(rt))
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during heart list fetch")))
@@ -84,7 +84,7 @@ public class WithingsMeasurementDao implements MeasurementDao {
         return  tokenDao.getAccessToken()
                 .flatMap(rt -> webClient
                         .get()
-                        .uri("/user?action=getdevice")
+                        .uri(this::buildDeviceUri)
                         .headers(h -> h.setBearerAuth(rt))
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during device list fetch")))
@@ -94,11 +94,20 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .doOnError(e -> log.error("Error during the device list fetch", e)));
     }
 
-    private String getHeartUri(int signalId) {
-        return "/heart?action=get&signalid=" + signalId;
+    private URI buildDeviceUri(UriBuilder uriBuilder) {
+        return uriBuilder.path("/user")
+                .queryParam("action", "getdevice")
+                .build();
     }
 
-    private URI build(UriBuilder uriBuilder, WithingsHeartListRequest request) {
+    private URI buildHeartUri(UriBuilder uriBuilder, WithingsSignalRequest request) {
+        return uriBuilder.path("/heart")
+                .queryParam("action", "get")
+                .queryParam("signalId", request.getSignalId())
+                .build();
+    }
+
+    private URI buildHeartListUri(UriBuilder uriBuilder, WithingsHeartListRequest request) {
         return uriBuilder.path("/heart")
                 .queryParam("action", "list")
                 .queryParam("startdate", toStartDate(request.getFrom()))

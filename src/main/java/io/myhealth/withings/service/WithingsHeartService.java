@@ -32,15 +32,13 @@ public class WithingsHeartService implements HeartService {
                 .flatMap(measurementDao::getHeartListAndDevices)
                 .flatMap(hd -> hd.isSuccess() ? Mono.just(hd) : Mono.error(new WithingsException("Client error with status: " + hd.getStatus())))
                 .transform(new WithingsHeartTransformer())
-                .zipWith(Mono.just(getPageNumber(request)), (r, m) -> setPageInfo(r, m))
+                .map(response -> pageInfo(request, response))
                 .flatMap(ServerResponse.ok()::bodyValue)
                 .switchIfEmpty(ServerResponse.badRequest().build());
     }
 
-    private WithingsHeartResponse setPageInfo(WithingsHeartResponse response, Integer pageNumber) {
-        response.setPageNumber(pageNumber);
-        response.setSize(DEFAULT_PAGE_SIZE);
-        return response;
+    private WithingsHeartResponse pageInfo(ServerRequest request, WithingsHeartResponse response) {
+        return new WithingsHeartResponse(response.getContent(), response.getOffset(), DEFAULT_PAGE_SIZE, getPageNumber(request));
     }
 
     @Override

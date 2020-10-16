@@ -14,15 +14,21 @@ public class WithingsHeartResponse implements Page<WithingsHeart> {
     private final int offset;
 
     @JsonProperty("pageSize")
-    private int size;
+    private final int pageSize;
 
     @JsonProperty("pageNumber")
-    private int pageNumber;
+    private final int pageNumber;
 
     public WithingsHeartResponse(List<WithingsHeart> hearts,
-                                 int offset) {
+                                 int offset, int pageSize, int pageNumber) {
         this.hearts = hearts;
         this.offset = offset;
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+    }
+
+    public WithingsHeartResponse(List<WithingsHeart> hearts, int offset) {
+        this(hearts, offset, 0, 0);
     }
 
     @JsonIgnore
@@ -38,19 +44,11 @@ public class WithingsHeartResponse implements Page<WithingsHeart> {
 
     @Override
     public int getPageSize() {
-        return this.size;
+        return this.pageSize;
     }
 
     @Override
     public int getPageNumber() {
         return this.pageNumber;
-    }
-
-    public void setPageNumber(int pageNumber) {
-        this.pageNumber = pageNumber;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 }
