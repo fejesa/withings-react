@@ -1,14 +1,14 @@
 package io.myhealth.withings.api;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 public class WithingsHeartResponse implements Page<WithingsHeart> {
 
-    @JsonProperty("content")
-    private final List<WithingsHeart> content;
+    @JsonProperty("hearts")
+    private final List<WithingsHeart> hearts;
 
     @JsonProperty("offset")
     private final int offset;
@@ -19,15 +19,16 @@ public class WithingsHeartResponse implements Page<WithingsHeart> {
     @JsonProperty("pageNumber")
     private int pageNumber;
 
-    public WithingsHeartResponse(List<WithingsHeart> content,
+    public WithingsHeartResponse(List<WithingsHeart> hearts,
                                  int offset) {
-        this.content = content;
+        this.hearts = hearts;
         this.offset = offset;
     }
 
+    @JsonIgnore
     @Override
     public List<WithingsHeart> getContent() {
-        return this.content;
+        return this.hearts;
     }
 
     @Override
