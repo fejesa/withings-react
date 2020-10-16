@@ -4,7 +4,7 @@ import com.withings.api.heart.*;
 import com.withings.api.user.Device;
 import com.withings.api.user.DeviceBody;
 import com.withings.api.user.DeviceList;
-import io.myhealth.withings.api.WithingsHeart;
+import io.myhealth.withings.api.WithingsHeartResponse;
 import io.myhealth.withings.model.HeartsWithDevices;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Mono;
@@ -26,8 +26,8 @@ class WithingsHeartTransformerTest {
         DeviceList deviceList = new DeviceList(0, deviceBody);
         Mono<HeartsWithDevices> in = Mono.just(new HeartsWithDevices(heartList, deviceList));
 
-        Mono<List<WithingsHeart>> out = new WithingsHeartTransformer().apply(in);
-        out.subscribe(result -> assertTrue(result.isEmpty()));
+        Mono<WithingsHeartResponse> out = new WithingsHeartTransformer().apply(in);
+        out.subscribe(result -> assertTrue(result.getContent().isEmpty()));
     }
 
 
@@ -46,7 +46,7 @@ class WithingsHeartTransformerTest {
 
         Mono<HeartsWithDevices> in = Mono.just(new HeartsWithDevices(heartList, deviceList));
 
-        Mono<List<WithingsHeart>> out = new WithingsHeartTransformer().apply(in);
-        out.subscribe(result -> assertEquals(1, result.size()));
+        Mono<WithingsHeartResponse> out = new WithingsHeartTransformer().apply(in);
+        out.subscribe(result -> assertEquals(1, result.getContent().size()));
     }
 }

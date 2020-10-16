@@ -1,9 +1,10 @@
 package io.myhealth.withings.service;
 
 import io.myhealth.withings.api.WithingsException;
-import io.myhealth.withings.api.WithingsHeartRequest;
-import io.myhealth.withings.api.WithingsSignalRequest;
+import io.myhealth.withings.api.WithingsHeartResponse;
 import io.myhealth.withings.dao.MeasurementDao;
+import io.myhealth.withings.dao.WithingsHeartListRequest;
+import io.myhealth.withings.dao.WithingsSignalRequest;
 import io.myhealth.withings.transform.DateTimeTransformer;
 import io.myhealth.withings.transform.WithingsHeartTransformer;
 import io.myhealth.withings.transform.WithingsSignalTransformer;
@@ -17,6 +18,8 @@ import java.time.LocalDate;
 @Component
 public class WithingsHeartService implements HeartService {
 
+    private static final int DEFAULT_PAGE_SIZE = 100;
+
     private final MeasurementDao measurementDao;
 
     public WithingsHeartService(MeasurementDao measurementDao) {
@@ -26,31 +29,47 @@ public class WithingsHeartService implements HeartService {
     @Override
     public Mono<ServerResponse> getHeartMeasurements(ServerRequest request) {
         return heartRequest(request)
-                .flatMap(r -> measurementDao.getHeartListAndDevices(r.getFrom(), r.getTo()))
+                .flatMap(measurementDao::getHeartListAndDevices)
                 .flatMap(hd -> hd.isSuccess() ? Mono.just(hd) : Mono.error(new WithingsException("Client error with status: " + hd.getStatus())))
                 .transform(new WithingsHeartTransformer())
+                .zipWith(Mono.just(getPageNumber(request)), (r, m) -> setPageInfo(r, m))
                 .flatMap(ServerResponse.ok()::bodyValue)
                 .switchIfEmpty(ServerResponse.badRequest().build());
+    }
+
+    private WithingsHeartResponse setPageInfo(WithingsHeartResponse response, Integer pageNumber) {
+        response.setPageNumber(pageNumber);
+        response.setSize(DEFAULT_PAGE_SIZE);
+        return response;
     }
 
     @Override
     public Mono<ServerResponse> getEcgSignal(ServerRequest request) {
         return signalRequest(request)
-                .flatMap(r -> measurementDao.getSignalAndDevices(r.getSignalId()))
+                .flatMap(measurementDao::getSignalAndDevices)
                 .flatMap(sd -> sd.isSuccess() ? Mono.just(sd) : Mono.error(new WithingsException("Client error with status: " + sd.getStatus())))
                 .transform(new WithingsSignalTransformer())
                 .flatMap(ServerResponse.ok()::bodyValue)
                 .switchIfEmpty(ServerResponse.badRequest().build());
     }
 
-    private Mono<WithingsHeartRequest> heartRequest(ServerRequest request) {
-        LocalDate from = request.queryParam("from")
+    private Mono<WithingsHeartListRequest> heartRequest(ServerRequest request) {
+        var from = request.queryParam("from")
                 .map(DateTimeTransformer::fromString)
                 .orElseGet(() -> LocalDate.now().minusWeeks(1));
-        LocalDate to = request.queryParam("to")
+        var to = request.queryParam("to")
                 .map(DateTimeTransformer::fromString)
                 .orElseGet(LocalDate::now);
-        return Mono.just(new WithingsHeartRequest(from, to));
+        var offset = request.queryParam("offset")
+                .map(Integer::parseInt)
+                .orElse(0);
+        return Mono.just(new WithingsHeartListRequest(from, to, offset));
+    }
+
+    private int getPageNumber(ServerRequest request) {
+        return request.queryParam("page")
+                .map(Integer::parseInt)
+                .orElse(0);
     }
 
     private Mono<WithingsSignalRequest> signalRequest(ServerRequest request) {
@@ -58,6 +77,6 @@ public class WithingsHeartService implements HeartService {
                 .map(Integer::parseInt)
                 .map(WithingsSignalRequest::new)
                 .map(Mono::just)
-                .orElseThrow(() -> new WithingsException());
+                .orElseThrow(WithingsException::new);
     }
 }

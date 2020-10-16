@@ -3,8 +3,8 @@ package io.myhealth.withings.service;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-import io.myhealth.withings.api.WithingsSignalRequest;
-import io.myhealth.withings.api.WithingsHeartRequest;
+import io.myhealth.withings.dao.WithingsSignalRequest;
+import io.myhealth.withings.dao.WithingsHeartListRequest;
 
 public interface HeartService {
 
@@ -13,7 +13,7 @@ public interface HeartService {
      * If the ECG recordings have been taken with BPM Core, the blood pressure is also provided.
      *
      * @param request Contains the period
-     * @see WithingsHeartRequest
+     * @see WithingsHeartListRequest
      */
     Mono<ServerResponse> getHeartMeasurements(ServerRequest request);
 

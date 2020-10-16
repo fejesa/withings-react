@@ -4,11 +4,9 @@ import io.myhealth.withings.model.HeartsWithDevices;
 import io.myhealth.withings.model.SignalWithDevices;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDate;
-
 public interface MeasurementDao {
 
-    Mono<HeartsWithDevices> getHeartListAndDevices(LocalDate from, LocalDate to);
+    Mono<HeartsWithDevices> getHeartListAndDevices(WithingsHeartListRequest request);
 
-    Mono<SignalWithDevices> getSignalAndDevices(int signalId);
+    Mono<SignalWithDevices> getSignalAndDevices(WithingsSignalRequest request);
 }

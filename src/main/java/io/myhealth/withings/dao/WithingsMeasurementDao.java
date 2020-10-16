@@ -12,10 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.lang.invoke.MethodHandles;
+import java.net.URI;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneOffset;
@@ -35,16 +37,16 @@ public class WithingsMeasurementDao implements MeasurementDao {
     }
 
     @Override
-    public Mono<HeartsWithDevices> getHeartListAndDevices(LocalDate from, LocalDate to) {
-        Mono<HeartList> heartList = getHeartLists(from, to).subscribeOn(Schedulers.elastic());
+    public Mono<HeartsWithDevices> getHeartListAndDevices(WithingsHeartListRequest request) {
+        Mono<HeartList> heartList = getHeartLists(request).subscribeOn(Schedulers.elastic());
         Mono<DeviceList> deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
 
         return Mono.zip(heartList, deviceList, HeartsWithDevices::new);
     }
 
     @Override
-    public Mono<SignalWithDevices> getSignalAndDevices(int signalId) {
-        Mono<Signal> signal = getSignal(signalId).subscribeOn(Schedulers.elastic());
+    public Mono<SignalWithDevices> getSignalAndDevices(WithingsSignalRequest request) {
+        Mono<Signal> signal = getSignal(request.getSignalId()).subscribeOn(Schedulers.elastic());
         Mono<DeviceList> deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
 
         return Mono.zip(signal, deviceList, SignalWithDevices::new);
@@ -64,17 +66,17 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .doOnError(e -> log.error("Error during the signal fetch", e)));
     }
 
-    private Mono<HeartList> getHeartLists(LocalDate from, LocalDate to) {
+    private Mono<HeartList> getHeartLists(WithingsHeartListRequest request) {
         return tokenDao.getAccessToken()
                 .flatMap(rt -> webClient
                         .get()
-                        .uri(getHearListUri(from, to))
+                        .uri(uriBuilder -> build(uriBuilder, request))
                         .headers(h -> h.setBearerAuth(rt))
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during heart list fetch")))
                         .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during heart list fetch")))
                         .bodyToMono(HeartList.class)
-                        .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}", from, to))
+                        .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}", request.getFrom(), request.getTo()))
                         .doOnError(e -> log.error("Error during the heart list fetch", e)));
     }
 
@@ -96,11 +98,13 @@ public class WithingsMeasurementDao implements MeasurementDao {
         return "/heart?action=get&signalid=" + signalId;
     }
 
-    private String getHearListUri(LocalDate from, LocalDate to) {
-        StringBuilder builder = new StringBuilder("/heart?action=list");
-        builder.append("&startdate=").append(toStartDate(from));
-        builder.append("&enddate=").append(toEndDate(to));
-        return builder.toString();
+    private URI build(UriBuilder uriBuilder, WithingsHeartListRequest request) {
+        return uriBuilder.path("/heart")
+                .queryParam("action", "list")
+                .queryParam("startdate", toStartDate(request.getFrom()))
+                .queryParam("enddate", toEndDate(request.getTo()))
+                .queryParam("offset", request.getOffset())
+                .build();
     }
 
     private long toStartDate(LocalDate date) {
