@@ -38,16 +38,16 @@ public class WithingsMeasurementDao implements MeasurementDao {
 
     @Override
     public Mono<HeartsWithDevices> getHeartListAndDevices(WithingsHeartListRequest request) {
-        Mono<HeartList> heartList = getHeartLists(request).subscribeOn(Schedulers.elastic());
-        Mono<DeviceList> deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
+        var heartList = getHeartLists(request).subscribeOn(Schedulers.elastic());
+        var deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
 
         return Mono.zip(heartList, deviceList, HeartsWithDevices::new);
     }
 
     @Override
     public Mono<SignalWithDevices> getSignalAndDevices(WithingsSignalRequest request) {
-        Mono<Signal> signal = getSignal(request).subscribeOn(Schedulers.elastic());
-        Mono<DeviceList> deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
+        var signal = getSignal(request).subscribeOn(Schedulers.elastic());
+        var deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
 
         return Mono.zip(signal, deviceList, SignalWithDevices::new);
     }

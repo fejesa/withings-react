@@ -25,7 +25,7 @@ public class WithingsSignalTransformer implements Function<Mono<SignalWithDevice
     }
 
     private String getWearPosition(Signal signal) {
-        int wearPosition = signal.getBody().getSignal() == null ? -1 : signal.getBody().getWearPositionId();
+        var wearPosition = signal.getBody().getSignal() == null ? -1 : signal.getBody().getWearPositionId();
         return WearPosition.valueOf(wearPosition).getName();
     }
 }
