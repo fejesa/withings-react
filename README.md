@@ -11,50 +11,51 @@ REST API.
 The client can fetch Blood Pressure measurement results in a given period by sending
 a GET request from a console - for example using [httpie](https://httpie.org/) - like
 ```
-http GET localhost:8080/heart from==2020-07-01 to==2020-07-31
+http GET localhost:8080/heart from==2020-07-01 to==2020-07-05 offset==0 page==1
 ```
-and gets the response like
+where
+* if there are more results use _offset_ value to retrieve next available rows
+* page is the current page number.
+
+The client gets the response in JSON like
 ```html
 HTTP/1.1 200 OK
-Content-Length: 657
+Content-Length: 386
 Content-Type: application/json
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-[
-    {
+{
+    "hearts": [
+        {
             "deviceName": "BPM Core",
-            "diastole": 87,
-            "heartRate": 51,
-            "signalId": 4860685,
-            "systole": 126,
-            "timestamp": 1592076032
+            "diastole": 84,
+            "heartRate": 53,
+            "signalId": 5382498,
+            "systole": 124,
+            "timestamp": 1593879223
         },
         {
             "deviceName": "BPM Core",
-            "diastole": 82,
-            "heartRate": 50,
-            "signalId": 4860532,
-            "systole": 119,
-            "timestamp": 1592075619
+            "diastole": 76,
+            "heartRate": 63,
+            "signalId": 5352489,
+            "systole": 109,
+            "timestamp": 1593772606
         },
         {
             "deviceName": "BPM Core",
-            "diastole": 85,
-            "heartRate": 52,
-            "signalId": -1,
-            "systole": 126,
-            "timestamp": 1592066588
-        },
-        {
-            "deviceName": "BPM Core",
-            "diastole": 83,
-            "heartRate": 60,
-            "signalId": 4848934,
-            "systole": 128,
-            "timestamp": 1592036329
+            "diastole": 78,
+            "heartRate": 55,
+            "signalId": 5346785,
+            "systole": 121,
+            "timestamp": 1593756340
         }
-]
+    ],
+    "offset": 0,
+    "pageNumber": 1,
+    "pageSize": 100
+}
 ```
 In addition to the client can get a full data set of the ECG recordings by sending a GET request like
 ```
