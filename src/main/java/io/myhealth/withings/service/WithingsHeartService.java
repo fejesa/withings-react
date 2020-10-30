@@ -71,7 +71,7 @@ public class WithingsHeartService implements HeartService {
     }
 
     private Mono<WithingsSignalRequest> signalRequest(ServerRequest request) {
-        return request.queryParam("signalId")
+        return request.queryParam("signalid")
                 .map(Integer::parseInt)
                 .map(WithingsSignalRequest::new)
                 .map(Mono::just)

@@ -103,7 +103,7 @@ public class WithingsMeasurementDao implements MeasurementDao {
     private URI buildHeartUri(UriBuilder uriBuilder, WithingsSignalRequest request) {
         return uriBuilder.path("/heart")
                 .queryParam("action", "get")
-                .queryParam("signalId", request.getSignalId())
+                .queryParam("signalid", request.getSignalId())
                 .build();
     }
 
