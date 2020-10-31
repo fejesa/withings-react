@@ -1,7 +1,7 @@
 package io.myhealth.withings.dao;
 
 import com.withings.api.oauth.Token;
-import io.myhealth.withings.model.WithingsToken;
+import io.myhealth.withings.model.ApplicationToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,16 +44,16 @@ public class WithingsTokenFetcher implements TokenFetcher {
     @Scheduled(fixedRate = 2L * 3600 * 1000)
     public void refreshToken() {
 
-        Mono<WithingsToken> result = WithingsToken
+        Mono<ApplicationToken> result = ApplicationToken
                 .read(tokenFile)
-                .flatMap(withingsToken -> webClient
+                .flatMap(applicationToken -> webClient
                         .post()
                         .uri("/oauth2/token")
                         .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
-                        .body(createBodyInserter(withingsToken.getRefreshToken()))
+                        .body(createBodyInserter(applicationToken.getRefreshToken()))
                         .exchange()
                         .flatMap(response -> response.bodyToMono(Token.class))
-                        .map(t -> new WithingsToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
+                        .map(t -> new ApplicationToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
                         .subscribeOn(Schedulers.elastic())
                         .doOnSuccess(t -> log.info("Token successfully refreshed"))
                         .doOnError(e -> log.error("Token fetch error", e))
@@ -85,9 +85,9 @@ public class WithingsTokenFetcher implements TokenFetcher {
         return LocalDateTime.now().plusSeconds(offset);
     }
 
-    private void writeToken(WithingsToken token) {
+    private void writeToken(ApplicationToken token) {
         try {
-            WithingsToken.writeToken(token, tokenFile);
+            ApplicationToken.writeToken(token, tokenFile);
         } catch (IOException e) {
             log.error("Token file error", e);
         }
