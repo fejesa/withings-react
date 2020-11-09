@@ -34,8 +34,8 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
     }
 
     private WithingsHeart fromMeasurement(HeartMeasurement measurement, DeviceList devices) {
-        var diastole = measurement.getBloodPressure().getDiastole();
-        var systole = measurement.getBloodPressure().getSystole();
+        var diastole = measurement.getBloodPressure() != null ? measurement.getBloodPressure().getDiastole() : -1;
+        var systole = measurement.getBloodPressure() != null ? measurement.getBloodPressure().getSystole() : -1;
         var heartRate = measurement.getHeartRate();
         var signalId = getSignalId(measurement);
         var deviceName = Devices.find(devices, measurement.getModelId());
