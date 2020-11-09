@@ -16,6 +16,7 @@ public class RouterConfig {
         return route()
                 .GET("/heart", heartHandler::getHeartMeasurements)
                 .GET("/ecg", heartHandler::getEcgSignal)
+                .GET("/bp", heartHandler::getBloodPressures)
                 .build();
     }
 }

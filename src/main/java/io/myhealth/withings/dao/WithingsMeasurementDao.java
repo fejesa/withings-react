@@ -37,6 +37,11 @@ public class WithingsMeasurementDao implements MeasurementDao {
     }
 
     @Override
+    public Mono<HeartList> getBloodPressures(WithingsHeartListRequest request) {
+        return getHeartLists(request).subscribeOn(Schedulers.elastic());
+    }
+
+    @Override
     public Mono<HeartsWithDevices> getHeartListAndDevices(WithingsHeartListRequest request) {
         var heartList = getHeartLists(request).subscribeOn(Schedulers.elastic());
         var deviceList = getDeviceList().subscribeOn(Schedulers.elastic());
@@ -76,7 +81,7 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during heart list fetch")))
                         .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during heart list fetch")))
                         .bodyToMono(HeartList.class)
-                        .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}", request.getFrom(), request.getTo()))
+                        .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}, offset {}", request.getFrom(), request.getTo(), request.getOffset()))
                         .doOnError(e -> log.error("Error during the heart list fetch", e)));
     }
 

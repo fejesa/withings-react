@@ -5,6 +5,7 @@ by using [Spring Webflux](https://docs.spring.io/spring/docs/current/spring-fram
 The client can call the
 * /heart
 * /ecg
+* /bp
 
 REST API.
 
