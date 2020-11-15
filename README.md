@@ -58,11 +58,48 @@ Vary: Access-Control-Request-Headers
     "pageSize": 100
 }
 ```
+
+The user can fetch only the systolic and diastolic values without
+signals and devices by calling the _bp_ API, for example
+```
+http GET localhost:8080/bp from==2020-09-02 to==2020-09-03
+```
+The client gets the response in JSON like
+```html
+HTTP/1.1 200 OK
+Content-Length: 205
+Content-Type: application/json
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+
+[
+    {
+        "diastole": 84,
+        "heartRate": 50,
+        "systole": 129,
+        "timestamp": 1599039396
+    },
+    {
+        "diastole": 83,
+        "heartRate": 48,
+        "systole": 131,
+        "timestamp": 1599075737
+    },
+    {
+        "diastole": 80,
+        "heartRate": 51,
+        "systole": 124,
+        "timestamp": 1599075996
+    }
+]
+```
+
 In addition to the client can get a full data set of the ECG recordings by sending a GET request like
 ```
 http GET localhost:8080/ecg signalId==5982490
 ```
-Both result types can be used by the downstream applications like UI or reporting.
+All result types can be used by the downstream applications like UI or reporting.
 
 ## Requirements
 * Java 11+
