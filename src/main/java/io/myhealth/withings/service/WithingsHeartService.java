@@ -42,12 +42,12 @@ public class WithingsHeartService implements HeartService {
                 .flatMap(measurementDao::getBloodPressures)
                 .flatMap(this::mapByStatus)
                 .flatMap(r -> {
-                    Mono<List<HeartMeasurement>> first = Mono.just(r.getHeartBody().getSeries());
-                    Mono<List<HeartMeasurement>> second = r.getHeartBody().getOffset() > 0 ?
-                            Mono.just(new WithingsHeartListRequest(heartRequest.getFrom(), heartRequest.getTo(), r.getHeartBody().getOffset()))
+                    Mono<List<HeartMeasurement>> first = Mono.just(r.getSeries());
+                    Mono<List<HeartMeasurement>> second = r.getOffset() > 0 ?
+                            Mono.just(new WithingsHeartListRequest(heartRequest.getFrom(), heartRequest.getTo(), r.getOffset()))
                                     .flatMap(measurementDao::getBloodPressures)
                                     .flatMap(this::mapByStatus)
-                                    .flatMap(hr -> Mono.just(hr.getHeartBody().getSeries())) : Mono.just(Collections.emptyList());
+                                    .flatMap(hr -> Mono.just(hr.getSeries())) : Mono.just(Collections.emptyList());
                     return Mono.zip(first, second);
                     })
                 .map(t -> Stream.of(t.getT1(), t.getT2())

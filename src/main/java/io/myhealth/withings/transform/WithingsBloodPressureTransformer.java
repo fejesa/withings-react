@@ -25,9 +25,6 @@ public class WithingsBloodPressureTransformer implements Function<Mono<List<Hear
     }
 
     private WithingsBloodPressure fromMeasurement(HeartMeasurement measurement) {
-        var diastole = measurement.getBloodPressure() != null ? measurement.getBloodPressure().getDiastole() : -1;
-        var systole = measurement.getBloodPressure() != null ? measurement.getBloodPressure().getSystole() : -1;
-        var heartRate = measurement.getHeartRate();
-        return new WithingsBloodPressure(diastole, systole, heartRate, measurement.getTimestamp());
+        return new WithingsBloodPressure(measurement.getDiastole(), measurement.getSystole(), measurement.getHeartRate(), measurement.getTimestamp());
     }
 }

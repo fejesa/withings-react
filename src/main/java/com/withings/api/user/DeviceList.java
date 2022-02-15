@@ -1,25 +1,38 @@
 package com.withings.api.user;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.myhealth.withings.api.WithingsException;
+
+import java.util.List;
 
 public class DeviceList {
 
     private final int status;
 
-    private final DeviceBody deviceBody;
+    private final List<Device> devices;
 
-    @JsonCreator
-    public DeviceList(@JsonProperty("status") int status, @JsonProperty("body") DeviceBody deviceBody) {
+    public DeviceList(int status, List<Device> devices) {
         this.status = status;
-        this.deviceBody = deviceBody;
+        this.devices = devices;
     }
 
     public int getStatus() {
         return status;
     }
 
-    public DeviceBody getDeviceBody() {
-        return deviceBody;
+    public List<Device> getDevices() {
+        return devices;
+    }
+
+    public static DeviceList fromString(String source) {
+        try {
+            var tree = new ObjectMapper().readTree(source);
+            var status = tree.get("status").asInt();
+            var devices = Device.fromString(source);
+            return new DeviceList(status, devices);
+        } catch (JsonProcessingException e) {
+            throw new WithingsException("Cannot process device list", e);
+        }
     }
 }

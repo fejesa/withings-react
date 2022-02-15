@@ -66,7 +66,8 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during signal fetch")))
                         .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during signal fetch")))
-                        .bodyToMono(Signal.class)
+                        .bodyToMono(String.class)
+                        .map(Signal::fromString)
                         .doOnSuccess(t -> log.info("Signal {} is fetched", request.getSignalId()))
                         .doOnError(e -> log.error("Error during the signal fetch", e)));
     }
@@ -80,7 +81,8 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during heart list fetch")))
                         .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during heart list fetch")))
-                        .bodyToMono(HeartList.class)
+                        .bodyToMono(String.class)
+                        .map(HeartList::fromString)
                         .doOnSuccess(t -> log.info("Heart list is fetched from {} to {}, offset {}", request.getFrom(), request.getTo(), request.getOffset()))
                         .doOnError(e -> log.error("Error during the heart list fetch", e)));
     }
@@ -94,7 +96,8 @@ public class WithingsMeasurementDao implements MeasurementDao {
                         .retrieve()
                         .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(new WithingsException("Client error during device list fetch")))
                         .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(new WithingsException("Withings server error during device list fetch")))
-                        .bodyToMono(DeviceList.class)
+                        .bodyToMono(String.class)
+                        .map(DeviceList::fromString)
                         .doOnSuccess(t -> log.info("Device list is fetched"))
                         .doOnError(e -> log.error("Error during the device list fetch", e)));
     }

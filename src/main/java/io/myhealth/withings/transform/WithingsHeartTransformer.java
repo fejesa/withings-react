@@ -21,7 +21,7 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
 
     private WithingsHeartResponse transform(HeartsWithDevices result) {
         var hearts = result.getHeartList()
-                .getHeartBody().getSeries()
+                .getSeries()
                 .stream()
                 .map(m -> fromMeasurement(m, result.getDeviceList()))
                 .sorted(Comparator.comparing(WithingsHeart::getTimestamp).reversed())
@@ -30,19 +30,12 @@ public class WithingsHeartTransformer implements Function<Mono<HeartsWithDevices
     }
 
     private int offset(HeartsWithDevices result) {
-        return result.getHeartList().getHeartBody().getOffset();
+        return result.getHeartList().getOffset();
     }
 
     private WithingsHeart fromMeasurement(HeartMeasurement measurement, DeviceList devices) {
-        var diastole = measurement.getBloodPressure() != null ? measurement.getBloodPressure().getDiastole() : -1;
-        var systole = measurement.getBloodPressure() != null ? measurement.getBloodPressure().getSystole() : -1;
-        var heartRate = measurement.getHeartRate();
-        var signalId = getSignalId(measurement);
-        var deviceName = Devices.find(devices, measurement.getModelId());
-        return new WithingsHeart(diastole, systole, heartRate, signalId, deviceName, measurement.getTimestamp());
-    }
-
-    private int getSignalId(HeartMeasurement measurement) {
-        return measurement.getEcg() != null ? measurement.getEcg().getSignalId() : -1;
+        var deviceName = Devices.find(devices, measurement.getModel());
+        return new WithingsHeart(measurement.getDiastole(), measurement.getSystole(),
+                measurement.getHeartRate(), measurement.getSignalId(), deviceName, measurement.getTimestamp());
     }
 }

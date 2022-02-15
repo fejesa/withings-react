@@ -1,44 +1,25 @@
 package com.withings.api.oauth;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.myhealth.withings.api.WithingsException;
 
 public class Token {
 
     private final String accessToken;
 
-    private final String tokenType;
-
-    private final String scope;
-
     private final String refreshToken;
 
     private final int expiresIn;
 
-    private final int userId;
-
-    @JsonCreator
-    public Token(@JsonProperty("access_token") String accessToken, @JsonProperty("token_type") String tokenType,
-                 @JsonProperty("scope") String scope, @JsonProperty("refresh_token") String refreshToken,
-                 @JsonProperty("expires_in") int expiresIn, @JsonProperty("userid") int userId) {
+    public Token(String accessToken, String refreshToken, int expiresIn) {
         this.accessToken = accessToken;
-        this.tokenType = tokenType;
-        this.scope = scope;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;
-        this.userId = userId;
     }
 
     public String getAccessToken() {
         return accessToken;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public String getScope() {
-        return scope;
     }
 
     public String getRefreshToken() {
@@ -49,7 +30,16 @@ public class Token {
         return expiresIn;
     }
 
-    public int getUserId() {
-        return userId;
+    public static Token fromString(String source) {
+        try {
+            var node = new ObjectMapper().readTree(source);
+            var body = node.get("body");
+            var accessToken = body.get("access_token").textValue();
+            var refreshToken = body.get("refresh_token").textValue();
+            var expiresIn = body.get("expires_in").asInt();
+            return new Token(accessToken, refreshToken, expiresIn);
+        } catch (JsonProcessingException e) {
+            throw new WithingsException("Cannot process token", e);
+        }
     }
 }

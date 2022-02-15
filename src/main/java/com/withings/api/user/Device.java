@@ -1,62 +1,54 @@
 package com.withings.api.user;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.myhealth.withings.api.WithingsException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Device {
 
     private final String type;
 
-    private final String battery;
+    private final int modelId;
 
     private final String model;
 
-    private final int modelId;
-
-    private final String timezone;
-
-    private final int lastSessionDate;
-
-    private final String deviceId;
-
-    @JsonCreator
-    public Device(@JsonProperty("type") String type, @JsonProperty("battery") String battery, @JsonProperty("model") String model,
-                  @JsonProperty("model_id") int modelId, @JsonProperty("timezone") String timezone,
-                  @JsonProperty("last_session_date") int lastSessionDate, @JsonProperty("deviceid") String deviceId) {
+    public Device(String type, String model, int modelId) {
         this.type = type;
-        this.battery = battery;
         this.model = model;
         this.modelId = modelId;
-        this.timezone = timezone;
-        this.lastSessionDate = lastSessionDate;
-        this.deviceId = deviceId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getBattery() {
-        return battery;
-    }
-
-    public String getModel() {
-        return model;
     }
 
     public int getModelId() {
         return modelId;
     }
 
-    public String getTimezone() {
-        return timezone;
+    public String getType() {
+        return type;
     }
 
-    public int getLastSessionDate() {
-        return lastSessionDate;
+    public String getModel() {
+        return model;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public static List<Device> fromString(String source) {
+        try {
+            var tree = new ObjectMapper().readTree(source);
+            var devices = tree.get("body").get("devices").elements();
+            var result = new ArrayList<Device>();
+            while (devices.hasNext()) {
+                var device = devices.next();
+                var type = device.get("type").asText();
+                var model = device.get("model").asText();
+                var modelId = device.get("model_id").asInt();
+                result.add(new Device(type, model, modelId));
+            }
+
+            return result;
+        } catch (JsonProcessingException e) {
+            throw new WithingsException("Cannot process device list", e);
+        }
     }
 }

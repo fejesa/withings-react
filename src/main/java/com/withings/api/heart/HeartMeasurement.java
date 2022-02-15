@@ -1,48 +1,54 @@
 package com.withings.api.heart;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.myhealth.withings.api.WithingsException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiFunction;
 
 public class HeartMeasurement {
 
-    private final String deviceId;
+    private final int signalId;
 
-    private final int modelId;
+    private final int afib;
 
-    private final Ecg ecg;
+    private final int diastole;
 
-    private final BloodPressure bloodPressure;
+    private final int systole;
 
     private final int heartRate;
 
     private final int timestamp;
 
-    @JsonCreator
-    public HeartMeasurement(@JsonProperty("deviceid") String deviceId, @JsonProperty("model") int modelId,
-                            @JsonProperty("ecg") Ecg ecg, @JsonProperty("bloodpressure") BloodPressure bloodPressure,
-                            @JsonProperty("heart_rate") int heartRate, @JsonProperty("timestamp") int timestamp) {
-        this.deviceId = deviceId;
-        this.modelId = modelId;
-        this.ecg = ecg;
-        this.bloodPressure = bloodPressure;
+    private final int model;
+
+    public HeartMeasurement(int signalId, int afib, int diastole, int systole, int heartRate, int model, int timestamp) {
+        this.signalId = signalId;
+        this.afib = afib;
+        this.diastole = diastole;
+        this.systole = systole;
         this.heartRate = heartRate;
+        this.model = model;
         this.timestamp = timestamp;
     }
 
-    public String getDeviceId() {
-        return deviceId;
+    public int getSignalId() {
+        return signalId;
     }
 
-    public int getModelId() {
-        return modelId;
+    public int getAfib() {
+        return afib;
     }
 
-    public Ecg getEcg() {
-        return ecg;
+    public int getDiastole() {
+        return diastole;
     }
 
-    public BloodPressure getBloodPressure() {
-        return bloodPressure;
+    public int getSystole() {
+        return systole;
     }
 
     public int getHeartRate() {
@@ -51,5 +57,36 @@ public class HeartMeasurement {
 
     public int getTimestamp() {
         return timestamp;
+    }
+
+    public int getModel() {
+        return model;
+    }
+
+    public static List<HeartMeasurement> fromString(String source) {
+        try {
+            var tree = new ObjectMapper().readTree(source);
+            var series = tree.get("body").get("series").elements();
+
+             BiFunction<JsonNode, String, Integer> getBloodPressure = (node, field) -> node.has("bloodpressure") ? node.get("bloodpressure").get(field).asInt() : -1;
+
+            var result = new ArrayList<HeartMeasurement>();
+            while (series.hasNext()) {
+                var node = series.next();
+
+                var signalId = node.get("ecg").get("signalid").asInt();
+                var afib = node.get("ecg").get("afib").asInt();
+                var diastole = getBloodPressure.apply(node, "diastole");
+                var systole = getBloodPressure.apply(node,"systole");
+                var heartRate = node.get("heart_rate").asInt();
+                var model = node.get("model").asInt();
+                var timestamp = node.get("timestamp").asInt();
+
+                result.add(new HeartMeasurement(signalId, afib, diastole, systole, heartRate, model, timestamp));
+            }
+            return result;
+        } catch (JsonProcessingException e) {
+            throw new WithingsException("Cannot process heart measurement", e);
+        }
     }
 }

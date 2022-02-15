@@ -2,6 +2,10 @@ package io.myhealth.withings.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.List;
 
 public class WithingsHeart {
 
@@ -13,6 +17,8 @@ public class WithingsHeart {
 
     /** -1 means no signal is detected */
     private final int signalId;
+
+    private int afib;
 
     private final String deviceName;
 
@@ -52,5 +58,15 @@ public class WithingsHeart {
 
     public int getTimestamp() {
         return timestamp;
+    }
+
+    public static List<WithingsHeart> fromString(String source) {
+        try {
+            var node = new ObjectMapper().readTree(source);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

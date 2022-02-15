@@ -48,13 +48,16 @@ public class WithingsTokenFetcher implements TokenFetcher {
                 .read(tokenFile)
                 .flatMap(applicationToken -> webClient
                         .post()
-                        .uri("/oauth2/token")
+                        .uri("/v2/oauth2")
                         .headers(h -> h.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
                         .body(createBodyInserter(applicationToken.getRefreshToken()))
                         .exchange()
-                        .flatMap(response -> response.bodyToMono(Token.class))
+                        .flatMap(response -> response.bodyToMono(String.class))
+                        .map(Token::fromString)
                         .map(t -> new ApplicationToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
+                        .log()
                         .subscribeOn(Schedulers.elastic())
+                        .log()
                         .doOnSuccess(t -> log.info("Token successfully refreshed"))
                         .doOnError(e -> log.error("Token fetch error", e))
                 );

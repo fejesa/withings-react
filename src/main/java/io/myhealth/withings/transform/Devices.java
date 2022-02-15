@@ -6,7 +6,7 @@ import com.withings.api.user.DeviceList;
 public class Devices {
 
     public static String find(DeviceList devices, int modelId) {
-        return devices.getDeviceBody().getDevices()
+        return devices.getDevices()
                 .stream()
                 .filter(d -> d.getModelId() == modelId)
                 .map(Device::getModel)

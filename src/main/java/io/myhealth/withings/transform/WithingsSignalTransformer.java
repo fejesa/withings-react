@@ -18,14 +18,14 @@ public class WithingsSignalTransformer implements Function<Mono<SignalWithDevice
 
     private WithingsSignal transform(SignalWithDevices result) {
         return new WithingsSignal(
-                result.getSignal().getBody().getSignal(),
-                result.getSignal().getBody().getSamplingFrequency(),
-                Devices.find(result.getDeviceList(), result.getSignal().getBody().getModel()),
+                result.getSignal().getSignal(),
+                result.getSignal().getSamplingFrequency(),
+                Devices.find(result.getDeviceList(), result.getSignal().getModel()),
                 getWearPosition(result.getSignal()));
     }
 
     private String getWearPosition(Signal signal) {
-        var wearPosition = signal.getBody().getSignal() == null ? -1 : signal.getBody().getWearPositionId();
+        var wearPosition = signal.getSignal() == null ? -1 : signal.getWearPositionId();
         return WearPosition.valueOf(wearPosition).getName();
     }
 }
