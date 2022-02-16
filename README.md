@@ -106,6 +106,8 @@ All result types can be used by the downstream applications like UI or reporting
 * Maven
 * Register as Withings API partner [here](https://account.withings.com/partner/account_create?b=dashboard_oauth2).
 
+**Note: Please setup the following scope: user.metrics and user.info**
+
 ## How to build
 Execute the following command
 ```
