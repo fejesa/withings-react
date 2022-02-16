@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.IntNode;
 import io.myhealth.withings.api.WithingsException;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Spliterator;
@@ -50,12 +51,13 @@ public class Signal {
         return model;
     }
 
-    public static Signal fromString(String source) {
+    public static Signal fromJson(@NotNull String source) {
         try {
             var tree = new ObjectMapper().readTree(source);
 
             var status = tree.get("status").asInt();
             var body = tree.get("body");
+
             var frequency = body.get("sampling_frequency").asInt();
             var wearPosition = body.get("wearposition").asInt();
             var model = body.get("model").asInt();

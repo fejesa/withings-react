@@ -3,6 +3,7 @@ package com.withings.api.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.myhealth.withings.api.WithingsException;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -25,11 +26,11 @@ public class DeviceList {
         return devices;
     }
 
-    public static DeviceList fromString(String source) {
+    public static DeviceList fromJson(@NotNull String source) {
         try {
             var tree = new ObjectMapper().readTree(source);
             var status = tree.get("status").asInt();
-            var devices = Device.fromString(source);
+            var devices = Device.fromJson(source);
             return new DeviceList(status, devices);
         } catch (JsonProcessingException e) {
             throw new WithingsException("Cannot process device list", e);

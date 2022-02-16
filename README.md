@@ -1,5 +1,5 @@
 # Reactive way to access Withings Heart API 
-The example application demonstrates how to access the [Withings](https://developer.withings.com/) health API in reactive way
+The example application demonstrates how to access the [Withings](https://developer.withings.com/api-reference) health API in reactive way
 by using [Spring Webflux](https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html).
 
 The client can call the
@@ -7,7 +7,7 @@ The client can call the
 * /ecg
 * /bp
 
-REST API.
+REST endpoints.
 
 The client can fetch Blood Pressure measurement results in a given period by sending
 a GET request from a console - for example using [httpie](https://httpie.org/) - like
@@ -97,14 +97,14 @@ Vary: Access-Control-Request-Headers
 
 In addition to the client can get a full data set of the ECG recordings by sending a GET request like
 ```
-http GET localhost:8080/ecg signalId==5982490
+http GET localhost:8080/ecg signalid==5982490
 ```
 All result types can be used by the downstream applications like UI or reporting.
 
 ## Requirements
 * Java 11+
 * Maven
-* Register as Withings API partner [here](https://account.withings.com/connectionuser/account_create).
+* Register as Withings API partner [here](https://account.withings.com/partner/account_create?b=dashboard_oauth2).
 
 ## How to build
 Execute the following command
@@ -112,7 +112,8 @@ Execute the following command
 mvn clean package
 ```
 ## Configuration
-Customize the _application.yml_ file with your settings
+* Follow the instruction about OAuth setup [here](https://developer.withings.com/api-reference#tag/oauth2).
+* Copy the access and refresh tokens to the _application.yml_ file.
 ```yaml
 myhealth:
     withings:
@@ -121,7 +122,7 @@ myhealth:
 
 withings:
     api:
-        tokenHost: https://account.withings.com
+        tokenHost: https://wbsapi.withings.net
         clientId: your_client_id
         clientSecret: your_client_secret
         redirectUri: your_redirect_uri

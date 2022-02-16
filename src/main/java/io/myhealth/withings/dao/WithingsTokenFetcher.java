@@ -53,7 +53,7 @@ public class WithingsTokenFetcher implements TokenFetcher {
                         .body(createBodyInserter(applicationToken.getRefreshToken()))
                         .exchange()
                         .flatMap(response -> response.bodyToMono(String.class))
-                        .map(Token::fromString)
+                        .map(Token::fromJson)
                         .map(t -> new ApplicationToken(t.getAccessToken(), t.getRefreshToken(), getExpirationTime(t.getExpiresIn())))
                         .log()
                         .subscribeOn(Schedulers.elastic())

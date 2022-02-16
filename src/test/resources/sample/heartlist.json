@@ -3,32 +3,396 @@
   "body": {
     "series": [
       {
-        "deviceid": "xxxxxx",
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
         "model": 44,
         "ecg": {
-          "signalid": 5992490,
+          "signalid": 103218342,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 80,
+          "systole": 133
+        },
+        "heart_rate": 58,
+        "timestamp": 1644909314
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 103100787,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 77,
+          "systole": 132
+        },
+        "heart_rate": 52,
+        "timestamp": 1644871407
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102955265,
           "afib": 0
         },
         "bloodpressure": {
           "diastole": 84,
-          "systole": 128
+          "systole": 121
         },
-        "heart_rate": 62,
-        "timestamp": 1595916999
+        "heart_rate": 51,
+        "timestamp": 1644835618
       },
       {
-        "deviceid": "xxxxxx",
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
         "model": 44,
         "ecg": {
-          "signalid": 5982555,
+          "signalid": 102885315,
           "afib": 0
         },
         "bloodpressure": {
           "diastole": 86,
-          "systole": 132
+          "systole": 133
+        },
+        "heart_rate": 50,
+        "timestamp": 1644819782
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102734418,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 79,
+          "systole": 130
+        },
+        "heart_rate": 53,
+        "timestamp": 1644772321
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102733371,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 85,
+          "systole": 131
+        },
+        "heart_rate": 53,
+        "timestamp": 1644772045
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102732160,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 85,
+          "systole": 148
+        },
+        "heart_rate": 51,
+        "timestamp": 1644771747
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102644823,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 85,
+          "systole": 131
         },
         "heart_rate": 52,
-        "timestamp": 1595881259
+        "timestamp": 1644748431
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102602929,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 90,
+          "systole": 138
+        },
+        "heart_rate": 50,
+        "timestamp": 1644739290
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102464884,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 96,
+          "systole": 162
+        },
+        "heart_rate": 56,
+        "timestamp": 1644692119
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102369367,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 91,
+          "systole": 142
+        },
+        "heart_rate": 53,
+        "timestamp": 1644665646
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102368217,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 97,
+          "systole": 157
+        },
+        "heart_rate": 50,
+        "timestamp": 1644665355
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102367733,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 98,
+          "systole": 162
+        },
+        "heart_rate": 49,
+        "timestamp": 1644665205
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102295999,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 94,
+          "systole": 148
+        },
+        "heart_rate": 51,
+        "timestamp": 1644648102
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 102002525,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 88,
+          "systole": 142
+        },
+        "heart_rate": 52,
+        "timestamp": 1644561628
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 101901490,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 95,
+          "systole": 142
+        },
+        "heart_rate": 47,
+        "timestamp": 1644526181
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 101900438,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 97,
+          "systole": 143
+        },
+        "heart_rate": 46,
+        "timestamp": 1644525925
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 97015890,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 90,
+          "systole": 137
+        },
+        "heart_rate": 44,
+        "timestamp": 1643147084
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 97014735,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 92,
+          "systole": 149
+        },
+        "heart_rate": 45,
+        "timestamp": 1643146799
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 93877830,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 83,
+          "systole": 132
+        },
+        "heart_rate": 48,
+        "timestamp": 1642281463
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 93877365,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 85,
+          "systole": 127
+        },
+        "heart_rate": 49,
+        "timestamp": 1642281286
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 93314057,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 86,
+          "systole": 135
+        },
+        "heart_rate": 55,
+        "timestamp": 1642102004
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 93313180,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 87,
+          "systole": 124
+        },
+        "heart_rate": 54,
+        "timestamp": 1642101785
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 93006083,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 92,
+          "systole": 139
+        },
+        "heart_rate": 45,
+        "timestamp": 1642018058
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 92064939,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 93,
+          "systole": 140
+        },
+        "heart_rate": 50,
+        "timestamp": 1641762174
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 90862421,
+          "afib": 0
+        },
+        "bloodpressure": {
+          "diastole": 89,
+          "systole": 131
+        },
+        "heart_rate": 50,
+        "timestamp": 1641416419
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 89951080,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 84,
+          "systole": 130
+        },
+        "heart_rate": 48,
+        "timestamp": 1641161715
+      },
+      {
+        "deviceid": "6e3352a30ae474b8db16be10ea3e93ff48df78f6",
+        "model": 44,
+        "ecg": {
+          "signalid": 89950721,
+          "afib": 2
+        },
+        "bloodpressure": {
+          "diastole": 90,
+          "systole": 125
+        },
+        "heart_rate": 48,
+        "timestamp": 1641161593
       }
     ],
     "more": false,

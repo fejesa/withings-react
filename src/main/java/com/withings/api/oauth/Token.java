@@ -30,7 +30,7 @@ public class Token {
         return expiresIn;
     }
 
-    public static Token fromString(String source) {
+    public static Token fromJson(String source) {
         try {
             var node = new ObjectMapper().readTree(source);
             var body = node.get("body");

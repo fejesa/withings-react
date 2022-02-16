@@ -4,10 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.myhealth.withings.api.WithingsException;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.BiFunction;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class HeartMeasurement {
 
@@ -63,30 +67,32 @@ public class HeartMeasurement {
         return model;
     }
 
-    public static List<HeartMeasurement> fromString(String source) {
+    public static List<HeartMeasurement> fromJson(@NotNull String source) {
         try {
             var tree = new ObjectMapper().readTree(source);
-            var series = tree.get("body").get("series").elements();
+            var series = tree.get("body").get("series");
 
-             BiFunction<JsonNode, String, Integer> getBloodPressure = (node, field) -> node.has("bloodpressure") ? node.get("bloodpressure").get(field).asInt() : -1;
-
-            var result = new ArrayList<HeartMeasurement>();
-            while (series.hasNext()) {
-                var node = series.next();
-
-                var signalId = node.get("ecg").get("signalid").asInt();
-                var afib = node.get("ecg").get("afib").asInt();
-                var diastole = getBloodPressure.apply(node, "diastole");
-                var systole = getBloodPressure.apply(node,"systole");
-                var heartRate = node.get("heart_rate").asInt();
-                var model = node.get("model").asInt();
-                var timestamp = node.get("timestamp").asInt();
-
-                result.add(new HeartMeasurement(signalId, afib, diastole, systole, heartRate, model, timestamp));
-            }
-            return result;
+            return StreamSupport.stream(
+                    Spliterators.spliteratorUnknownSize(series.elements(), Spliterator.ORDERED), false)
+                    .map(HeartMeasurement::getHeartMeasurement)
+                    .collect(Collectors.toList());
         } catch (JsonProcessingException e) {
             throw new WithingsException("Cannot process heart measurement", e);
         }
+    }
+
+    private static BiFunction<JsonNode, String, Integer> getBloodPressure =
+            (node, field) -> node.has("bloodpressure") ? node.get("bloodpressure").get(field).asInt() : -1;
+
+    private static HeartMeasurement getHeartMeasurement(JsonNode node) {
+        var signalId = node.get("ecg").get("signalid").asInt();
+        var afib = node.get("ecg").get("afib").asInt();
+        var diastole = getBloodPressure.apply(node, "diastole");
+        var systole = getBloodPressure.apply(node, "systole");
+        var heartRate = node.get("heart_rate").asInt();
+        var model = node.get("model").asInt();
+        var timestamp = node.get("timestamp").asInt();
+
+        return new HeartMeasurement(signalId, afib, diastole, systole, heartRate, model, timestamp);
     }
 }
